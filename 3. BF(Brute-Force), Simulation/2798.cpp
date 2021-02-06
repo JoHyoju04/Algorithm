@@ -3,19 +3,21 @@ using namespace std;
 int N, M, sum = 0, result = 0;
 bool visited[101] = { 0, };
 int arr[101];
-// DFS: 메모리 2016KB, 시간 4ms
-void DFS(int size) {
+
+// DFS: 메모리 2016KB, 시간 0ms
+void DFS(int size, int idx) {
     if (size == 3) {
-        if (sum <= M && sum > result) {
+        if (sum > result) {
             result = sum;
         }
     }
     else {
-        for (int i = 0; i < N; i++) {
+        for (int i = idx; i < N; i++) {
             if (!visited[i]) {
                 visited[i] = true;
                 sum += arr[i];
-                DFS(size + 1);
+                if (sum <= M)
+                    DFS(size + 1, idx + 1);
                 sum -= arr[i];
                 visited[i] = false;
             }
@@ -28,7 +30,7 @@ int main()
     for (int i = 0; i < N; i++) {
         cin >> arr[i];
     }
-    DFS(0);
+    DFS(0, 0);
     cout << result;
     return 0;
 }

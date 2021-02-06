@@ -8,7 +8,7 @@ int main()
     string n = to_string(N);
     if (N <= 10 && N / 2 == 0)   answer = N / 2;
     else {
-        for (int i = N - 9 * n.size(); i <= N; i++) {
+        for (int i = (int)(N - 9 * n.size()) < 0 ? 1 : N - 9 * n.size(); i <= N; i++) {
             int sum = i;
             string sum_str = to_string(sum);
             for (int j = 0; j < sum_str.size(); j++) {
