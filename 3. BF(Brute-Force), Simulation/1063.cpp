@@ -26,17 +26,17 @@ pair<char, int> location(pair<char, int> ch, string m) {
 }
 int main()
 {
-    vector<string> move(50);
+    string move;
     int N;
     pair<char, int> king;   pair<char, int> rock;
     cin >> king.first >> king.second >> rock.first >> rock.second >> N;
     for (int i = 0; i < N; i++) {
-        cin >> move[i];
-        pair<char, int> chess = location(king, move[i]);
+        cin >> move;
+        pair<char, int> chess = location(king, move);
         if (chess == king) continue;
         else if (chess == rock) {
-            if (location(rock, move[i]) == rock)    continue;
-            else rock = location(rock, move[i]);
+            if (location(rock, move) == rock)    continue;
+            else rock = location(rock, move);
         }
         king = chess;
     }
