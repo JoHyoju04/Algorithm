@@ -10,16 +10,11 @@ int find(int a) {
         return y;
     }
 }
-bool isSameParent(int a, int b) {
-    int x = find(a);
-    int y = find(b);
-    if (x == y)    return true;
-    else return false;
-}
+
 void uni(int a, int b) {
-    if (isSameParent(a, b))  return;
     int x = find(a);
     int y = find(b);
+    if (x == y)    return;
     if (parent[x] < parent[y]) {
         parent[x] += parent[y];
         parent[y] = x;
@@ -40,7 +35,7 @@ int main() {
         cin >> oper >> a >> b;
         if (oper == 0) uni(a, b);
         else {
-            if (isSameParent(a, b))   cout << "YES\n";
+            if (find(a) == find(b))   cout << "YES\n";
             else cout << "NO\n";
         }
     }
