@@ -1,68 +1,62 @@
+#include <cstdio>
 #include <iostream>
-#include <iostream>
-#include <vector>
- 
+
 using namespace std;
- 
-vector<int> slice(const vector<int> &v, int a, int b)
-{
-    return vector<int>(v.begin() + a, v.begin() + b);
-}
- 
-void printPostOrder(const vector<int> &preorder, const vector<int> &inorder)
-{
-    const int N = preorder.size();
- 
-    if (preorder.empty())
-        return;
- 
-    const int root = preorder[0];
- 
-    int i;
-    for (i = 0; i < N; i++)
-        if (inorder[i] == root)
-            break;
- 
-    const int L = i;
- 
-    const int R = N - L - 1;
-    
-    printPostOrder(slice(preorder, 1, L + 1), slice(inorder, 0, L));
-    printPostOrder(slice(preorder, L + 1, N), slice(inorder, L + 1, N));
- 
-    cout<<root;
-}
-int main()
-{
-    int tCase;
-    vector<int> pre;
-    vector<int> in;
-    cin<<tCase;
- 
-    while (tCase--)
-    {
-        pre.clear();
-        in.clear();
- 
-        int n, val;
-        cin<<n;
- 
-        for (int i = 1; i <= n; i++)
-        {
-            cin>>val;
-            pre.push_back(val);
+
+class Node {
+public:
+    int value;
+    Node *left, *right;
+    Node(int value):value(value) {}
+};
+
+int n;
+int order[1001];
+int preorder[1001];
+int inorder[1001];
+
+Node* make_tree(int st, int ed) {
+    if (st > ed)
+        return NULL;
+
+    int min_order = 0x7ffffff, min_value = 0, min_i = 0;
+    for (int i = st; i <= ed; i++) {
+        int value = inorder[i];
+        if (min_order > order[value]) {
+            min_order = order[value];
+            min_value = value;
+            min_i = i;
         }
-        for (int i = 1; i <= n; i++)
-        {
-            cin>>val;
-            in.push_back(val);
-        }
- 
-        printPostOrder(pre, in);
- 
-        cout<<"\n";
- 
     }
- 
-    return 0;
+
+    Node *root = new Node(min_value);
+    root->left = make_tree(st, min_i - 1);
+    root->right = make_tree(min_i + 1, ed);
+
+    return root;
+}
+
+void post_order(Node *node) {
+    if (node->left != NULL) post_order(node->left);
+    if (node->right != NULL) post_order(node->right);
+    printf("%d ", node->value);
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        cin >> n;
+        for (int i = 0; i < n; i++) {
+            cin >> preorder[i];
+            order[preorder[i]] = i + 1;
+        }
+        for (int i = 0; i < n; i++) {
+            cin >> inorder[i];
+        }
+
+        Node *root = make_tree(0, n - 1);
+        post_order(root);
+        printf("\n");
+    }
 }
