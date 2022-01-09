@@ -1,56 +1,59 @@
 #include <iostream>
+#include <string>
 #include <vector>
-#include <cstdlib>
 using namespace std;
-int N, M, h_size = 0, c_size = 0, answer = 5000;
-vector<vector<int> > house(101, vector<int>(3, 0));
-vector<vector<int> > chicken(14, vector<int>(3, 0));
-vector<vector<int> > chicken_list(14, vector<int>(3, 0));
 
-int sum(vector<vector<int> > list) {
-    int ret = 0, add = 0, min;
-    for (int i = 0; i < h_size; i++) {
-        min = 100;
-        for (int j = 0; j < M; j++) {
-            add = abs(house[i][0] - list[j][0]) + abs(house[i][1] - list[j][1]);
-            min = min < add ? min : add;
+#define MAX 101
+
+int N, M;
+vector<pair<int, int> > chickenList, homeList;
+int answer = 987654321;
+
+void minChicken(const vector < pair<int, int> >& chickenM) {
+    int chickenDist = 0;
+    for (int i = 0; i < homeList.size(); i++) {
+        int r = homeList[i].first;
+        int c = homeList[i].second;
+        int dist = MAX;
+        for (int j = 0; j < chickenM.size(); j++) {
+            int cr = chickenM[j].first;
+            int cc = chickenM[j].second;
+            dist = dist < abs(r - cr) + abs(c - cc) ? dist : abs(r - cr) + abs(c - cc);
         }
-        ret += min;
+        chickenDist += dist;
     }
-    return ret;
+    answer = answer < chickenDist ? answer : chickenDist;
 }
 
-void DFS(int cnt, int idx) {
+void selectChicken(vector<pair<int, int> > chickenM, int cnt, int idx) {
     if (cnt == M) {
-        int dist = sum(chicken_list);
-        answer = dist > answer ? answer : dist;
+        minChicken(chickenM);
+        return;
     }
-    else {
-        for (int i = idx; i < c_size; i++) {
-            chicken_list[cnt][0] = chicken[i][0];
-            chicken_list[cnt][1] = chicken[i][1];
-            DFS(cnt + 1, i + 1);
-        }
+    for (int i = idx; i < chickenList.size(); i++) {
+        chickenM.push_back({ chickenList[i].first,chickenList[i].second });
+        selectChicken(chickenM, cnt + 1, i + 1);
+        chickenM.pop_back();
     }
 }
 
 int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
     cin >> N >> M;
-    int num;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
+            int num = 0;
             cin >> num;
-            if (num == 1) {
-                house[h_size][0] = i;
-                house[h_size++][1] = j;
-            }
-            else if (num == 2) {
-                chicken[c_size][0] = i;
-                chicken[c_size++][1] = j;
-            }
+            if (num == 1)    homeList.push_back({ i + 1,j + 1 });
+            else if (num == 2)    chickenList.push_back({ i + 1,j + 1 });
         }
     }
-    DFS(0, 0);
+
+    vector<pair<int, int> > list;
+    selectChicken(list, 0, 0);
+
     cout << answer;
+
     return 0;
 }
