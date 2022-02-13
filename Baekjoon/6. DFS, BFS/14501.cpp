@@ -1,3 +1,33 @@
+#include<iostream>
+using namespace std;
+
+int T[16];
+int P[16];
+int N, maxPrice;
+
+void dfs(int startDay, int sumPrice) {
+    maxPrice = maxPrice > sumPrice ? maxPrice : sumPrice;
+    for (int i = startDay; i <= N; i++) {
+        if (i != 0 && i + T[i] <= N + 1) {
+            dfs(i + T[i], sumPrice + P[i]);
+        }
+    }
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin >> N;
+    for (int i = 1; i <= N; i++) {
+        cin >> T[i] >> P[i];
+    }
+    dfs(0, 0);
+    cout << maxPrice;
+    return 0;
+}
+/*
 #include <iostream>
 using namespace std;
 int N, answer = 0;
@@ -27,3 +57,4 @@ int main() {
     cout << answer;
     return 0;
 }
+*/
