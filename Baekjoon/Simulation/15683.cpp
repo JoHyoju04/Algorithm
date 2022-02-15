@@ -1,3 +1,110 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int dir[4][2] = { {0,1},{0,-1},{-1,0},{1,0} };
+int N, M, answer = 65;
+char map[9][9];
+vector<pair<int, int> > loc;
+vector <vector<int> > cctv1{ {0} ,{1},{2},{3} };
+vector <vector<int> > cctv2{ {0,1} ,{2,3} };
+vector <vector<int> > cctv3{ {1,2} ,{0,2},{1,3},{0,3} };
+vector <vector<int> > cctv4{ {0,1,2} ,{1,2,3} ,{0,1,3},{0,2,3} };
+vector <vector<int> > cctv5{ {0,1,2,3} };
+
+void move(vector<vector<int> >& cctv, int idx, char ch, int r, int c, bool del) {
+    for (int i = 0; i < cctv[idx].size(); i++) {
+        int nextR = r;
+        int nextC = c;
+        while (true) {
+            nextR += dir[cctv[idx][i]][0];
+            nextC += dir[cctv[idx][i]][1];
+            if (nextR < 0 || nextR >= N || nextC < 0 || nextC >= M || map[nextR][nextC] == '6') break;
+
+            if (!del && map[nextR][nextC] == '0')
+                map[nextR][nextC] = ch;
+            if (del && map[nextR][nextC] == ch)
+                map[nextR][nextC] = '0';
+
+        }
+    }
+}
+
+void dfs(int idx) {
+    if (idx == loc.size()) {
+        int cnt = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (map[i][j] == '0')  cnt++;
+            }
+        }
+        answer = answer < cnt ? answer : cnt;
+        return;
+    }
+
+    int size = 0;
+    int r = loc[idx].first, c = loc[idx].second;
+    int num = map[r][c] - '0';
+    if (num == 1)  size = 4;
+    if (num == 2)  size = 2;
+    if (num == 3)  size = 4;
+    if (num == 4)  size = 4;
+    if (num == 5)  size = 1;
+    for (int i = 0; i < size; i++) {
+        switch (num) {
+        case 1: {
+            move(cctv1, i, idx + 'a', r, c, 0);
+            dfs(idx + 1);
+            move(cctv1, i, idx + 'a', r, c, 1);
+            break;
+        }
+        case 2: {
+            move(cctv2, i, idx + 'a', r, c, 0);
+            dfs(idx + 1);
+            move(cctv2, i, idx + 'a', r, c, 1);
+            break;
+        }
+        case 3: {
+            move(cctv3, i, idx + 'a', r, c, 0);
+            dfs(idx + 1);
+            move(cctv3, i, idx + 'a', r, c, 1);
+            break;
+        }
+        case 4: {
+            move(cctv4, i, idx + 'a', r, c, 0);
+            dfs(idx + 1);
+            move(cctv4, i, idx + 'a', r, c, 1);
+            break;
+        }
+        case 5: {
+            move(cctv5, i, idx + 'a', r, c, 0);
+            dfs(idx + 1);
+            move(cctv5, i, idx + 'a', r, c, 1);
+            break;
+        }
+        }
+
+    }
+}
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin >> N >> M;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            cin >> map[i][j];
+            if (map[i][j] != '0' && map[i][j] != '6') {
+                loc.push_back({ i,j });
+            }
+        }
+    }
+    dfs(0);
+    cout << answer;
+    return 0;
+}
+/*
 #include <cstdio>
 #include <vector>
 #include <cstring>
@@ -81,3 +188,4 @@ int main() {
     printf("%d\n", ans);
     return 0;
 }
+*/

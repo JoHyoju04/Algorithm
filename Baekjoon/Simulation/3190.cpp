@@ -1,3 +1,77 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+int dir[4][2] = { {0,1},{-1,0},{0,-1},{1,0} };
+bool apple[101][101];
+char change[10001];
+bool visited[101][101];
+int N, K, L;
+
+int dummy() {
+    int curR = 0, curC = 0;
+    int time = 0, dIdx = 0;;
+    queue<pair<int, int> > q;
+    q.push({ 0,0 });
+    while (true) {
+        time++;
+        curR += dir[dIdx][0];
+        curC += dir[dIdx][1];
+
+        //벽 또는 자기 자신의 몸과 부딪히면 게임 종료
+        if (curR < 0 || curC < 0 || curR >= N || curC >= N || visited[curR][curC])    return time;
+
+        visited[curR][curC] = 1;
+
+        //머리
+        q.push({ curR,curC });
+
+        //꼬리
+        int tailR = q.front().first;
+        int tailC = q.front().second;
+
+        //사과가 없으면 꼬리위치에 방문표시 없애고 queue에 꼬리위치 pop
+        if (!apple[curR][curC]) {
+            visited[tailR][tailC] = 0;
+            q.pop();
+
+        }
+        else apple[curR][curC] = 0; //사과있으면 사과없앤다
+
+        //방향전환없으면 방향 그대로
+        if (change[time] != 'L' && change[time] != 'D')   continue;
+
+        //방향전환있으면 방향 바꾼다
+        if (change[time] == 'L') dIdx = (dIdx + 1) % 4;
+        else if (dIdx - 1 < 0) dIdx = 3;
+        else dIdx -= 1;
+    }
+
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin >> N >> K;
+    for (int i = 0; i < K; i++) {
+        int r, c;
+        cin >> r >> c;
+        apple[r - 1][c - 1] = 1;
+    }
+    cin >> L;
+    for (int i = 0; i < L; i++) {
+        int t;
+        char x;
+        cin >> t >> x;
+        change[t] = x;
+    }
+    cout << dummy();
+    return 0;
+}
+
+/*
 #include <iostream>
 #include<vector>
 #include <queue>
@@ -89,3 +163,4 @@ int main() {
     cout << answer;
     return 0;
 }
+*/
