@@ -2,39 +2,51 @@
 #include<string>
 #include<vector>
 #include<cstdlib>
+
 using namespace std;
 
+vector<string> pri = { "*-+","*+-","+*-","+-*","-*+","-+*" };
+
+long long calculate(long long a, long long b, char c) {
+    switch (c) {
+    case '+':return a + b;
+    case '-':return a - b;
+    case '*':return a * b;
+    }
+}
 long long solution(string expression) {
-    vector<long long> ori_num;
-    vector<char>ori_op;
-    vector<string>pri = { "*-+","*+-","+*-","+-*","-*+","-+*" };
-    string n = "";
+    vector<long long> nums;
+    vector<char> op;
+    string str = "";
     long long answer = 0;
     for (int i = 0; i < expression.size(); i++) {
-        if (expression[i] == '*' || expression[i] == '-' || expression[i] == '+') {
-            ori_op.push_back(expression[i]);
-            ori_num.push_back(stoll(n));
-            n = "";
+        char c = expression[i];
+        if (c == '*' || c == '-' || c == '+') {
+            op.push_back(c);
+            nums.push_back(stoi(str));
+            str = "";
         }
-        else n += expression[i];
+        else str += c;
+        if (i == expression.size() - 1)  nums.push_back(stoi(str));
     }
-    ori_num.push_back(stoll(n));
-    for (int j = 0; j < 6; j++) {
-        vector<long long> num = ori_num;
-        vector<char> op = ori_op;
-        for (int k = 0; k < 3; k++) {
-            for (int idx = 0; idx < op.size(); idx++) {
-                if (op[idx] == pri[j][k]) {
-                    if (op[idx] == '*')    num[idx] = num[idx] * num[idx + 1];
-                    else if (op[idx] == '-')   num[idx] = num[idx] - num[idx + 1];
-                    else if (op[idx] == '+')   num[idx] = num[idx] + num[idx + 1];
-                    num.erase(num.begin() + idx + 1);
-                    op.erase(op.begin() + idx);
-                    idx--;
+
+    for (int i = 0; i < 6; i++) {
+        vector<long long> copyN(nums.begin(), nums.end());
+        vector<char> copyOp = op;
+        for (int j = 0; j < 3; j++) {
+            char ch = pri[i][j];
+            for (int k = 0; k < copyOp.size(); k++) {
+                if (copyOp[k] == ch) {
+                    long long n = calculate(copyN[k], copyN[k + 1], ch);
+                    copyN[k] = n;
+                    copyN.erase(copyN.begin() + k + 1);
+                    copyOp.erase(copyOp.begin() + k);
+                    k--;
                 }
             }
         }
-        answer = answer < abs(num[0]) ? abs(num[0]) : answer;
+        answer = answer > abs(copyN[0]) ? answer : abs(copyN[0]);
     }
+
     return answer;
 }
