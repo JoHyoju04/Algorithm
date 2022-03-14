@@ -1,29 +1,35 @@
-/*
-< 1931 : 회의실 배정 >
-끝나는 시간을 기준으로 오름차순으로 정렬
-*/
 #include<iostream>
-#include<algorithm>
 #include<vector>
+#include <algorithm>
 using namespace std;
+
+bool cmp(pair<int, int> a, pair<int, int> b) {
+    if (a.second == b.second)  return a.first < b.first;
+    return a.second < b.second;
+}
 
 int main()
 {
-	int N, before = 0, answer = 0;
-	vector<pair<int, int> > time;
-	cin >> N;
-	for (int i = 0; i < N; i++) {
-		int start, end;
-		cin >> start >> end;
-		time.push_back({ end,start });
-	}
-	sort(time.begin(), time.end());
-	for (int i = 0; i < N; i++) {
-		if (before <= time[i].second) {
-			before = time[i].first;
-			answer++;
-		}
-	}
-	cout << answer;
-	return 0;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    int N, answer = 0;
+    vector<pair<int, int> > times;
+    cin >> N;
+
+    for (int i = 0; i < N; i++) {
+        int s, e;
+        cin >> s >> e;
+        times.push_back({ s,e });
+    }
+    sort(times.begin(), times.end(), cmp);
+    int end = 0;
+    for (int i = 0; i < N; i++) {
+        if (end <= times[i].first) {
+            end = times[i].second;
+            answer++;
+        }
+    }
+    cout << answer;
+    return 0;
 }
