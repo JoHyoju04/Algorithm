@@ -1,3 +1,63 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int map[101][101];
+bool visited[101][101];
+int dir[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int R, C, remain = 0, cnt = 0, time = 0;
+    queue<pair<int, int> > q;
+    cin >> R >> C;
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cin >> map[i][j];
+            cnt += map[i][j];
+            if (i == 0 || i == R - 1 || j == 0 || j == C - 1)    q.push({ i,j });
+        }
+    }
+    while (true) {
+        time++;
+        vector<pair<int, int> > vec;
+        while (!q.empty()) {
+            int r = q.front().first;
+            int c = q.front().second;
+            q.pop();
+            for (int i = 0; i < 4; i++) {
+                int nr = r + dir[i][0];
+                int nc = c + dir[i][1];
+                if (nr < 0 || nc < 0 || nr >= R || nc >= C || visited[nr][nc])    continue;
+                if (map[nr][nc] == 0) {
+                    q.push({ nr,nc });
+                }
+                else {
+                    vec.push_back({ nr,nc });
+                    map[nr][nc] = 0;
+                }
+                visited[nr][nc] = 1;
+            }
+        }
+
+        for (int i = 0; i < vec.size(); i++) {
+            q.push({ vec[i].first,vec[i].second });
+        }
+        remain = cnt;
+        cnt -= vec.size();
+        if (cnt == 0)  break;
+        vec.clear();
+    }
+    cout << time << "\n" << remain;
+    return 0;
+}
+/*
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -77,3 +137,4 @@ int main() {
 
     return 0;
 }
+*/

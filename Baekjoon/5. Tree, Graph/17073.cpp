@@ -1,31 +1,30 @@
-#include <iostream>
 #include <vector>
+#include<iostream>
 using namespace std;
-int N;
-bool visited[100001];
-int parent[100001];
-vector<int> tree[100001];
-void DFS(int num) {
-    visited[num] = true;
-    for (int i = 0; i < tree[num].size(); i++) {
-        int child = tree[num][i];
-        if (!visited[child]) {
-            parent[child] = num;
-            DFS(child);
-        }
-    }
-}
-int main() {
-    cin >> N;
+vector<int> adj[500002];
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    int N;
+    double W, leaf = 0;
+    double answer = 0;
+    cin >> N >> W;
     for (int i = 0; i < N - 1; i++) {
-        int node1, node2;
-        cin >> node1 >> node2;
-        tree[node1].push_back(node2);
-        tree[node2].push_back(node1);
+        int a, b;
+        cin >> a >> b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
-    DFS(1);
-    for (int i = 2; i <= N; i++)
-        cout << parent[i] << "\n";
+
+    for (int i = 2; i <= N; i++) {
+        if (adj[i].size() == 1)    leaf++;
+    }
+    answer = W / leaf;
+    cout.precision(10);
+    cout << fixed << answer << endl;
 
     return 0;
 }
