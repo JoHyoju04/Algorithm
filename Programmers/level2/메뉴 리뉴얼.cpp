@@ -1,3 +1,55 @@
+// 2022.07.01
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<map>
+using namespace std;
+map<string,int> m;
+
+void dfs(int depth,int idx,string s,string od){
+    if(depth>=2)    m[s]++;
+    if(depth==od.size())    return;
+    
+    for(int i=idx;i<od.size();i++){
+        s+=od[i];
+        dfs(depth+1,i+1,s,od);
+        s.pop_back();
+    }
+}
+
+vector<string> solution(vector<string> orders, vector<int> course) {
+    vector<string> answer;
+    
+    for(string s: orders){
+        sort(s.begin(),s.end());
+        dfs(0,0,"",s);
+    }
+    
+    for(int len : course){
+        int maxCnt=0;
+        vector<string> vec;
+        for(auto it=m.begin();it!=m.end();it++){
+            string s=it->first;
+            int cnt=it->second;
+            if(s.size()==len && cnt>1){
+                if(maxCnt<cnt){
+                    vec.clear();
+                    maxCnt=cnt;
+                }
+                if(maxCnt==cnt){
+                    vec.push_back(s);
+                }
+            }
+        }
+        for(string ss:vec)  answer.push_back(ss);
+        vec.clear();
+    }
+    sort(answer.begin(),answer.end());
+    
+    return answer;
+}
+/*
 #include<vector>
 #include<string>
 #include<algorithm>
@@ -40,6 +92,7 @@ vector<string> solution(vector<string> orders, vector<int> course) {
     sort(answer.begin(), answer.end());
     return answer;
 }
+*/
 /*
 #include<iostream>
 #include<vector>
