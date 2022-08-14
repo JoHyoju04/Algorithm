@@ -1,7 +1,34 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <queue>
 using namespace std;
+struct compare{
+    bool operator()(pair<int,int> a, pair<int,int> b){
+        return a.second>b.second;
+    }
+};
+
+int solution(vector<int> &A) {
+    priority_queue<pair<int,int>,vector<pair<int,int> >,cmp> pq;
+	for(int i=0;i<A.size();i++){
+		pq.push({i,A[i]});
+	}
+	answer=1
+	int idx=0;
+	pq.pop();
+
+	while(!pq.empty()){
+		int i=pq.top().first;
+		if(idx<i){
+			answer+=1;
+			idx=i;
+		}	
+		pq.pop();
+	}
+
+
+}
 
 //1<=C<=1000
 //1<=n<=20
