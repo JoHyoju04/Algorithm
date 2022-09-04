@@ -1,4 +1,25 @@
 import sys
+
+input=sys.stdin.readline
+n,m=map(int,input().split())
+words=dict()
+
+for _ in range(n):
+    ss=input().strip()
+    if len(ss)>=m:
+        if ss in words:
+            words[ss]+=1
+        else:
+            words[ss]=1
+
+sorted_words=sorted(words.items(),key=lambda item : (-item[1], -len(item[0]), item[0]))
+
+for key in sorted_words:
+    print(key[0])
+
+
+'''
+import sys
 input = sys.stdin.readline
 
 n,m = map(int, input().split())
@@ -20,3 +41,4 @@ ans = sorted(d.items(), key= lambda x: (-x[1][0], -x[1][1], x[1][2]))
 
 for a in ans:
 	print(a[0])
+'''
