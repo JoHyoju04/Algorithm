@@ -1,3 +1,36 @@
+import sys
+
+input=sys.stdin.readline
+
+INT_MAX = int(sys.maxsize)
+dp=[ INT_MAX for _ in range(101)]
+min_num=[0,0,1,7,4,2,0,8]
+
+def get_max(num):
+    return "7"*(num%2) + "1"*(num//2 - (num%2))
+
+def get_min():
+    dp[2]=1
+    dp[3]=7
+    dp[4]=4
+    dp[5]=2
+    dp[6]=6
+    dp[7]=8
+    dp[8]=10
+    for i in range(9,101):
+        for j in range(2,8):
+            ss=str(dp[i-j])+str(min_num[j])
+            dp[i]=min(dp[i],int(ss))
+
+test_case=int(input())
+nums=[int(input()) for _ in range(test_case)]
+get_min()
+
+for n in nums:
+    print(dp[n],end=" ")
+    print(get_max(n))
+
+'''
 def solutions(number):
     for i in range(len(number)):
         # 큰 수 구하기
@@ -34,3 +67,4 @@ def solutions(number):
 num = int(input())
 number = [int(input()) for _ in range(num)]
 solutions(number)
+'''
