@@ -31,3 +31,55 @@ def solution(n, m, x, y, r, c, k):
                 break
 
     return answer
+
+
+'''
+import sys
+sys.setrecursionlimit(5000)
+
+answer=""
+def dfs(depth,path,cr,cc):
+    global answer
+    
+    if len(answer)!=0:
+        return
+    
+    if K-len(path)<abs(cr-R)+abs(cc-C):
+        return
+    
+    if K==len(path):
+        answer=path
+        return
+    
+    for dirs in ["d","l","r","u"]:
+        nr,nc=cr,cc
+        if dirs=="d":
+            nr+=1
+        elif dirs=="l":
+            nc+=-1
+        elif dirs=="r":
+            nc+=1
+        elif dirs=="u":
+            nr+=-1
+        if 0<nr<=N and 0<nc<=M:
+            dfs(depth+1,path+dirs,nr,nc)
+    
+
+def solution(n, m, x, y, r, c, k):
+    global N,M,R,C,K,answer
+    
+    N,M,R,C,K=n,m,r,c,k
+    
+    def manhattan(x1, y1):
+        return abs(x1 - (r-1)) + abs(y1-(c-1))
+
+    if manhattan(x-1, y-1) > k or (manhattan(x-1, y-1) - k) % 2:
+        return 'impossible'
+    
+    dfs(0,"",x,y)
+    
+    if len(answer)==0:
+        return "impossible"
+    
+    return answer
+'''
