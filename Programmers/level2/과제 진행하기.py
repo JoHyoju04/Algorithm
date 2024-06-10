@@ -1,3 +1,49 @@
+from collections import deque
+
+def timeToInt(time):
+    hour = int(time[:2])
+    minute = int(time[3:])
+    return hour*60 + minute
+
+def solution(plans):
+    answer=[]
+    plans.sort(key=lambda x : x[1])
+    stack=[]
+    que = deque()
+    
+    for plan in plans:
+        startTime = timeToInt(plan[1])
+        que.append([plan[0],startTime,int(plan[2])])
+        
+    curPlan=que.popleft()
+    
+    while que:
+        curName = curPlan[0]
+        curStartTime = curPlan[1]
+        curPlayTime = curPlan[2]
+        curEndTime = curStartTime+curPlayTime
+        
+        nextPlan=que.popleft()
+        nextStartTime = nextPlan[1]
+        
+        if nextStartTime < curEndTime:
+            curRemainTime = curPlayTime - (nextStartTime-curStartTime)
+            stack.append([curName,curRemainTime])
+            curPlan=nextPlan
+        else:
+            answer.append(curName)
+            if stack:
+                stopPlan = stack.pop()
+                curPlan = [stopPlan[0],curEndTime,stopPlan[1]]
+                que.appendleft(nextPlan)
+            else:
+                curPlan=nextPlan
+    if curPlan[0] not in answer:
+        answer.append(curPlan[0])
+    while stack:
+        answer.append(stack.pop()[0])
+    return answer
+'''
 def time2min(t):
     ss=t.split(":")
     return int(ss[0])*60+int(ss[1])
@@ -55,6 +101,7 @@ def solution(plans):
             answer.append(s[0])
                 
     return answer
+'''
 
 '''
 def solution(plans):
